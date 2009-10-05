@@ -1,5 +1,6 @@
 ﻿package com.artionscript.palettes 
 {
+	import adobe.utils.ProductManager;
 	import flash.events.EventDispatcher;
 	/**
 	 * ...
@@ -7,9 +8,11 @@
 	 */
 	public class Palette extends EventDispatcher
 	{
+		public static const PALETTE_UPDATED:String = "palette_updated";
+		
 		private var _colours:Array;
 		
-		public static const PALETTE_UPDATED:String = "palette_updated";
+		private var _ready:Boolean = true;
 		
 		public function Palette()
 		{	
@@ -44,6 +47,8 @@
 			_colours = colours;
 		}
 		
-
+		public function isReady():Boolean {
+			return _ready;
+		}
 	}
 }

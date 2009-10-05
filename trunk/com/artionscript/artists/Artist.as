@@ -2,6 +2,10 @@
 {
 	
 	import com.artionscript.canvas.Canvas;
+	import com.artionscript.tools.FillVO;
+	import com.artionscript.tools.LineVO;
+	import com.artionscript.tools.stamps.RectangleStamp;
+	import com.artionscript.tools.Tool;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -22,6 +26,8 @@
 		private var _inspiration:Inspiration;
 		private var _palette:Palette;
 		
+		protected var _toolArray:Array;
+		
 		public function Artist(canvas:Canvas, inspiration:Inspiration=null, palette:Palette=null)
 		{
 			this.canvas = canvas;
@@ -32,18 +38,49 @@
 			this.palette.addEventListener(Palette.PALETTE_UPDATED, paletteUpdated, false, 0, true);
 		}
 		
-		public function create():void {}
+		public function repaint():void {
+			_toolArray = null;
+			canvas.clear();
+			create();
+		}
 		
-		private function paletteUpdated(e:Event = null):void {}
+		protected function setVariables():void { }
 		
-		private function inspirationUpdated(e:Event = null):void{}
+		public function create():void { }
 		
+		protected function finaliseCreate():void {
+			if (_toolArray && _toolArray.length != 0)
+			{
+				var tempTool:Tool;
+				var toolArrayLength:int = _toolArray.length - 1;
+				for (var j:int = toolArrayLength; j>=0; j--) {
+					tempTool = _toolArray[j] as Tool;
+					this.canvas.addChild(tempTool);
+				}
+			}
+		}
+		
+		protected function buildTool(...args):Tool {
+			return createTool(0, 0, null, null);
+		}
+		
+		protected function createTool(width:Number=0, height:Number=0, fillVO:FillVO = null, lineVO:LineVO = null, ...args):Tool {
+			return new RectangleStamp(width, height, 0, 0, fillVO, lineVO);
+		}
+		
+		protected function getAColour(...args):uint {
+			return getRandomPaletteColour();
+		}
 		protected function getRandomPaletteColour():uint {
 			return palette.getRandomColour();
 		}
 		protected function getPaletteColourAtIndex(index:int):uint {
 			return palette.getColourAtIndex(index);
-		}	
+		}
+		
+		protected function inspirationUpdated(e:Event = null):void { }
+		
+		protected function paletteUpdated(e:Event = null):void { }
 		
 		//*******************
 		//GETTERS AND SETTERS

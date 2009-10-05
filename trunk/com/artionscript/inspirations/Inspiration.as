@@ -9,9 +9,12 @@
 	{
 		public static const INSPIRATION_UPDATED:String = "inspiration_updated";
 		
-		public function Inspiration() 
-		{
-			
+		private var _ready:Boolean = true;
+		
+		public function Inspiration() { }
+		
+		public function isReady():Boolean {
+			return _ready;
 		}
 	}
 }

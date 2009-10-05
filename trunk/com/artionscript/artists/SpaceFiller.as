@@ -1,5 +1,6 @@
 ﻿package com.artionscript.artists 
 {	
+	import com.artionscript.tools.stamps.logos.UmbroStamp;
 	import com.artionscript.tools.Tool;
 	import flash.display.Sprite;
 	import flash.filters.BlurFilter;
@@ -25,10 +26,11 @@
 		
 		private var fillRequests:Array = new Array();
 		
-		private const MIN_SIZE:int = 50;
+		private const MAX_SIZE:int = 200;
+		private const MIN_SIZE:int = 5;
 		
 		private const MAX_FILL_PERC:Number = 1;
-		private const MIN_FILL_PERC:Number = .1;
+		private const MIN_FILL_PERC:Number = .01;
 				
 		public function SpaceFiller(canvas:Canvas, inspiration:Inspiration, palette:Palette) 
 		{
@@ -42,7 +44,7 @@
 		
 		private function fillRegion(regionX:Number, regionY:Number, regionWidth:Number, regionHeight:Number):void {
 			
-			var widthHeightRatio:Number = 0.618034; //1.618034;
+			var widthHeightRatio:Number = 0.452//0.618034; //1.618034;
 			var widthHeightInverseRatio:Number = 1 / widthHeightRatio;
 										  
 			var tempMaxWidth:Number;
@@ -59,9 +61,9 @@
 			var objectHeight:Number;
 
 			//calculate max possible height
-			tempMaxHeight = MAX_FILL_PERC * regionHeight;
+			tempMaxHeight = Math.min(MAX_FILL_PERC * regionHeight, MAX_SIZE*widthHeightRatio);
 			//calculate max possible width
-			tempMaxWidth = MAX_FILL_PERC * regionWidth
+			tempMaxWidth = Math.min(MAX_FILL_PERC * regionWidth, MAX_SIZE*widthHeightInverseRatio);
 			
 			//calculate max width taking into account max height
 			maxObjectWidth =  Math.min(tempMaxWidth, (tempMaxHeight * widthHeightInverseRatio));
