@@ -20,6 +20,7 @@
 	
 	import com.artionscript.artists.Artist;
 	import com.artionscript.artists.*;
+	import com.artionscript.artists.grid.*;
 	
 	import com.artionscript.inspirations.Inspiration;
 	import com.artionscript.inspirations.*;
@@ -82,29 +83,35 @@
 			paletteCitrusMajitoAvoidance.addColours(paletteCitrusAvoidance.colours);
 			paletteCitrusMajitoAvoidance.addColours(paletteMajito.colours);
 			
-			var canvas:Canvas = new Canvas(4000, 3000, 0xFFFFFF);
+			//var canvas:Canvas = new Canvas(4000, 3000, 0xFFFFFF);
 			//var canvas:Canvas = new Canvas(4000, 3000, 0x000000);
 			//var canvas:Canvas = new Canvas(4000, 3000, 0x353535);
 			
 			//var canvas:Canvas = new Canvas(3000, 4000, 0x000000);
 			//var canvas:Canvas = new Canvas(382, 286, 0xFFFFFF); 
+			var canvas:Canvas = new Canvas(1600, 1200, 0x000000);
 			//var canvas:Canvas = new Canvas(400, 300, 0x000000);//canvas.x = canvas.y = 400;
 			
 			canvas.cacheAsBitmap = true;
 			addChild(canvas);
 
 			_artistArray = new Array();
-			//_artistArray.push(new SquareGrid(canvas, new Inspiration(), paletteHyperactive));
-			//_artistArray.push(new RectangleBlurredGrid(canvas, new Inspiration(), paletteAvoidance));
-			//_artistArray.push(new CircleGrid(canvas, new Inspiration(), paletteAvoidance));
-			//_artistArray.push(new CircleGridExtended(canvas, new Inspiration(), paletteHyperactive));
+			//_artistArray.push(new Grid(canvas, new Inspiration(), paletteHyperactive));
+			//_artistArray.push(new CircleGrid(canvas, new Inspiration(), paletteHyperactive));
+			//_artistArray.push(new RectangleGrid(canvas, new Inspiration(), paletteHyperactive));
+			//_artistArray.push(new VariedGrid(canvas, new Inspiration(), paletteHyperactive));
+			//_artistArray.push(new CircleVariedGrid(canvas, new Inspiration(), paletteHyperactive));
+			_artistArray.push(new RectangleVariedGrid(canvas, new Inspiration(), paletteHyperactive));
+			
 			//_artistArray.push(new AngularLines(canvas, new Inspiration(), paletteExperience)); 
 			//_artistArray.push(new CityAtNight(canvas, new Inspiration(), paletteWorldAtNight));
 			//_artistArray.push(new Tunnel(canvas, new Inspiration(), palettePanton));
 			//_artistArray.push(new Arcs(canvas, new Inspiration(), paletteVitaminC));
-			_artistArray.push(new ArcTrails(canvas, new Inspiration(), paletteStepIntoTheLight));
+			//_artistArray.push(new ArcTrails(canvas, new Inspiration(), paletteStepIntoTheLight));
 			//_artistArray.push(new TarbellSpaceFiller(canvas, new Inspiration(), paletteAfrica));
 			//_artistArray.push(new SpaceFiller(canvas, new Inspiration(), paletteVitaminC));
+			//_artistArray.push(new UmbroSpaceFiller(canvas, new Inspiration(), paletteVitaminC));
+			//_artistArray.push(new SpaceFiller_v1(canvas, new Inspiration(), paletteVitaminC));
 			//_artistArray.push(new PieMosaic(canvas, new Inspiration(), palettePanton));
 			//_artistArray.push(new PantonCurves(canvas, new Inspiration(), palettePanton));
 			//_artistArray.push(new HorizontalLines(canvas, new Inspiration(), paletteCitrusGrove));
@@ -118,13 +125,10 @@
 			if (e.keyCode == Keyboard.SPACE){
 				if (_artistArray) {
 					var i:int;
-					for (i = 0; i < _artistArray.length; i++ ){
+					var artistArrayLength:int = _artistArray.length;
+					for (i = 0; i < artistArrayLength; i++ ){
 						//clear canvas
-						_artistArray[i].canvas.clear();
-					}
-					for (i = 0; i < _artistArray.length; i++ ){
-						//recreate art
-						_artistArray[i].create();
+						_artistArray[i].repaint();
 					}
 				}
 			}else if (e.ctrlKey) {

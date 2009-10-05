@@ -1,5 +1,6 @@
 ﻿package com.artionscript.artists 
 {	
+	import com.artionscript.tools.stamps.logos.UmbroStamp;
 	import com.artionscript.tools.Tool;
 	import flash.display.Sprite;
 	import flash.filters.BlurFilter;
@@ -16,21 +17,19 @@
 	/**
 	 * ...
 	 * @author Trevor Boyle
-	 * 
-	 * http://www.levitated.net/daily/levEmotionFractal.html
-	 * Inspired by Jared Tarbell's 'Emotional Fractal'
 	 */
-	public class SpaceFiller_v1 extends Artist
+	public class UmbroSpaceFiller extends SpaceFiller
 	{		
 		
 		private var fillRequests:Array = new Array();
 		
+		private const MAX_SIZE:int = 200;
 		private const MIN_SIZE:int = 5;
 		
-		private const MAX_FILL_PERC:Number = .9;
-		private const MIN_FILL_PERC:Number = .1;
+		private const MAX_FILL_PERC:Number = 1;
+		private const MIN_FILL_PERC:Number = .01;
 				
-		public function SpaceFiller_v1(canvas:Canvas, inspiration:Inspiration, palette:Palette) 
+		public function UmbroSpaceFiller(canvas:Canvas, inspiration:Inspiration, palette:Palette) 
 		{
 			super(canvas, inspiration, palette);
 			create();
@@ -42,7 +41,7 @@
 		
 		private function fillRegion(regionX:Number, regionY:Number, regionWidth:Number, regionHeight:Number):void {
 			
-			var widthHeightRatio:Number = 0.618034; //1.618034;
+			var widthHeightRatio:Number = 0.452//0.618034; //1.618034;
 			var widthHeightInverseRatio:Number = 1 / widthHeightRatio;
 										  
 			var tempMaxWidth:Number;
@@ -59,9 +58,9 @@
 			var objectHeight:Number;
 
 			//calculate max possible height
-			tempMaxHeight = MAX_FILL_PERC * regionHeight;
+			tempMaxHeight = Math.min(MAX_FILL_PERC * regionHeight, MAX_SIZE*widthHeightRatio);
 			//calculate max possible width
-			tempMaxWidth = MAX_FILL_PERC * regionWidth
+			tempMaxWidth = Math.min(MAX_FILL_PERC * regionWidth, MAX_SIZE*widthHeightInverseRatio);
 			
 			//calculate max width taking into account max height
 			maxObjectWidth =  Math.min(tempMaxWidth, (tempMaxHeight * widthHeightInverseRatio));
@@ -91,54 +90,54 @@
 				var leftSpace:Number = (tempObject.x-regionX);
 				var rightSpace:Number = regionWidth - ((tempObject.x-regionX) + tempObject.width);
 				var topSpace:Number = (tempObject.y-regionY);
-				var bottomSpace:Number = regionHeight - ((tempObject.y-regionY) + tempObject.height);
+				var bottomSpace:Number = regionHeight - ((tempObject.y - regionY) + tempObject.height);
 				
-				if (leftSpace >= MIN_SIZE){
-					fillRegion(regionX, tempObject.y, leftSpace, tempObject.height);
-					
+				if (regionWidth >= regionHeight) {
+				
 					if (topSpace >= MIN_SIZE) {
-						fillRegion(regionX, regionY, leftSpace, topSpace);
-					}
-
-					if (bottomSpace >= MIN_SIZE) {
-						fillRegion(regionX, (tempObject.y + tempObject.height), leftSpace, bottomSpace);
-					}
-				}
-				
-				
-				if (rightSpace >= MIN_SIZE){
-					fillRegion(tempObject.x + tempObject.width, tempObject.y, rightSpace, tempObject.height);
-					
-					if (topSpace >= MIN_SIZE) {
-						fillRegion(tempObject.x + tempObject.width, regionY, rightSpace, topSpace);
+						fillRegion(regionX, regionY, regionWidth, topSpace);
 					}
 					
 					if (bottomSpace >= MIN_SIZE) {
-						fillRegion(tempObject.x + tempObject.width, (tempObject.y + tempObject.height), rightSpace, bottomSpace);
+						fillRegion(regionX, (tempObject.y + tempObject.height), regionWidth, bottomSpace);
 					}
-				}
-				
-				if (topSpace >= MIN_SIZE) {
-					fillRegion(tempObject.x, regionY, tempObject.width, topSpace);
-				}
-				
-				if (bottomSpace >= MIN_SIZE) {
-					fillRegion(tempObject.x, (tempObject.y + tempObject.height), tempObject.width, bottomSpace);
-				}
-				
+					
+					if (leftSpace >= MIN_SIZE){
+						fillRegion(regionX, tempObject.y, leftSpace, tempObject.height);
+					}
+					
+					if (rightSpace >= MIN_SIZE){
+						fillRegion(tempObject.x + tempObject.width, tempObject.y, rightSpace, tempObject.height);
+					}
+				}else {
+					if (leftSpace >= MIN_SIZE){
+						fillRegion(regionX, regionY, leftSpace, regionHeight);
+					}
+					
+					if (rightSpace >= MIN_SIZE){
+						fillRegion(tempObject.x + tempObject.width, regionY, rightSpace, regionHeight);
+					}
+					
+					if (topSpace >= MIN_SIZE) {
+						fillRegion(tempObject.x, regionY, tempObject.width, topSpace);
+					}
+					
+					if (bottomSpace >= MIN_SIZE) {
+						fillRegion(tempObject.x, (tempObject.y + tempObject.height), tempObject.width, bottomSpace);
+					}
+				}		
 			}
 		}
 	
-		
 		private function drawObject (width:Number, height:Number):Tool {
 			var lineVO:LineVO = null;
 			var fillVO:FillVO = new FillVO();	
-			fillVO.color = getRandomPaletteColour();
+			fillVO.color = 0xa51a15//getRandomPaletteColour();
 			
-			var tempSquare:RectangleStamp;
-			tempSquare = new RectangleStamp(width, height, 0, 0, fillVO, lineVO);
+			var tempStamp:UmbroStamp;
+			tempStamp = new UmbroStamp(width, height, fillVO, lineVO);
 			
-			return tempSquare;
+			return tempStamp;
 		}
 	}
 }

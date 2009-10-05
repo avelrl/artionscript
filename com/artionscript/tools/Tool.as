@@ -13,16 +13,20 @@
 		public function Tool() {
 		}
 		
-		protected function setFillAndLineStyle(fillVO:FillVO, lineVO:LineVO):void {
+		protected function setFillAndLineStyle(fillVO:FillVO, lineVO:LineVO, target:Sprite = null):void {
+			
+			if (!target) {
+				target = this;
+			}
 			
 			if (lineVO != null){
-				this.graphics.lineStyle(lineVO.thickness, lineVO.color, lineVO.alpha, lineVO.pixelHinting, lineVO.scaleMode, lineVO.caps, lineVO.joints, lineVO.miterLimit);
+				target.graphics.lineStyle(lineVO.thickness, lineVO.color, lineVO.alpha, lineVO.pixelHinting, lineVO.scaleMode, lineVO.caps, lineVO.joints, lineVO.miterLimit);
 			}else {
-				this.graphics.lineStyle();
+				target.graphics.lineStyle();
 			}
 			
 			if(fillVO != null){
-				this.graphics.beginFill(fillVO.color, fillVO.alpha);
+				target.graphics.beginFill(fillVO.color, fillVO.alpha);
 			}else if(lineVO==null){
 				//Q. Should I default to a black fill if no line or fill is defined?
 				//A. I'm currently thinking no.
