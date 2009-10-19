@@ -2,6 +2,10 @@
 {	
 	//Saving functionality by http://www.bit-101.com/blog/?p=1415 - Keith Peters
 	//FP10 and patience required.
+	import com.artionscript.inspirations.images.BrightonPebblesInspiration;
+	import com.artionscript.inspirations.images.MonaLisaInspiration;
+	import com.artionscript.inspirations.images.SunflowersInspiration;
+	import com.artionscript.inspirations.images.TheScreamInspiration;
 	import com.bit101.SavingBitmap;
 	
 	import flash.display.Sprite;
@@ -59,49 +63,21 @@
             _bmpData = new BitmapData(stage.stageWidth, stage.stageHeight, true, 0xFF000000);
             _savingBmp = new SavingBitmap(_bmpData);
 			
-			var paletteAfrica:Palette = new PaletteAfrica();
-			var paletteAvoidance:Palette = new PaletteAvoidance();
-			var paletteCitrusGrove:Palette = new PaletteCitrusGrove();
-			var paletteExperience:Palette = new PaletteExperience();
-			var paletteFruitAndFuzz:Palette = new PaletteFruitAndFuzz();
-			var paletteGrey:Palette = new PaletteGrey();
-			var paletteHyperactive:Palette = new PaletteHyperactive();
-			var paletteMajito:Palette = new PaletteMajito();
-			var palettePanton:Palette = new PalettePanton();
-			var palettePhoenixTail:Palette = new PalettePhoenixTail();
-			var paletteSandyStoneBeach:Palette = new PaletteSandyStoneBeach();
-			var paletteStepIntoTheLight:Palette = new PaletteStepIntoTheLight();
-			var paletteTune:Palette = new PaletteTune();
-			var paletteVitaminC:Palette = new PaletteVitaminC();
-			var paletteWorldAtNight:Palette = new PaletteWorldAtNight();
+			var palette:Palette = StaticPaletteFactory.randomPalette();
 			
-			var paletteCitrusAvoidance:Palette = new Palette();
-			paletteCitrusAvoidance.addColours(paletteAvoidance.colours);
-			paletteCitrusAvoidance.addColours(paletteCitrusGrove.colours);
-			
-			var paletteCitrusMajitoAvoidance:Palette = new Palette();
-			paletteCitrusMajitoAvoidance.addColours(paletteCitrusAvoidance.colours);
-			paletteCitrusMajitoAvoidance.addColours(paletteMajito.colours);
-			
-			//var canvas:Canvas = new Canvas(4000, 3000, 0xFFFFFF);
-			//var canvas:Canvas = new Canvas(4000, 3000, 0x000000);
-			//var canvas:Canvas = new Canvas(4000, 3000, 0x353535);
-			
-			//var canvas:Canvas = new Canvas(3000, 4000, 0x000000);
-			//var canvas:Canvas = new Canvas(382, 286, 0xFFFFFF); 
-			var canvas:Canvas = new Canvas(1600, 1200, 0x000000);
-			//var canvas:Canvas = new Canvas(400, 300, 0x000000);//canvas.x = canvas.y = 400;
+			var canvas:Canvas = new Canvas(800, 600, 0x000000);
 			
 			canvas.cacheAsBitmap = true;
 			addChild(canvas);
 
 			_artistArray = new Array();
-			//_artistArray.push(new Grid(canvas, new Inspiration(), paletteHyperactive));
-			//_artistArray.push(new CircleGrid(canvas, new Inspiration(), paletteHyperactive));
+			//_artistArray.push(new Grid(canvas, new MonaLisaInspiration(),new PaletteCitrusGrove()));
+			//_artistArray.push(new CircleGrid(canvas, new SunflowersInspiration(), new Palette()));
 			//_artistArray.push(new RectangleGrid(canvas, new Inspiration(), paletteHyperactive));
+			//_artistArray.push(new ArrowGrid(canvas, new MonaLisaInspiration(), new PaletteHyperactive()));
 			//_artistArray.push(new VariedGrid(canvas, new Inspiration(), paletteHyperactive));
-			//_artistArray.push(new CircleVariedGrid(canvas, new Inspiration(), paletteHyperactive));
-			_artistArray.push(new RectangleVariedGrid(canvas, new Inspiration(), paletteHyperactive));
+			_artistArray.push(new CircleVariedGrid(canvas, new BrightonPebblesInspiration(), new Palette()));
+			//_artistArray.push(new RectangleVariedGrid(canvas, new SunflowersInspiration(), new Palette()));
 			
 			//_artistArray.push(new AngularLines(canvas, new Inspiration(), paletteExperience)); 
 			//_artistArray.push(new CityAtNight(canvas, new Inspiration(), paletteWorldAtNight));
@@ -116,7 +92,6 @@
 			//_artistArray.push(new PantonCurves(canvas, new Inspiration(), palettePanton));
 			//_artistArray.push(new HorizontalLines(canvas, new Inspiration(), paletteCitrusGrove));
 			//_artistArray.push(new KPetersWave(canvas, new Inspiration(), paletteCitrusGrove));
-			
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyPress);
 		}

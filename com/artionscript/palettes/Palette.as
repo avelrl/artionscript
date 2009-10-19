@@ -9,6 +9,7 @@
 	public class Palette extends EventDispatcher
 	{
 		public static const PALETTE_UPDATED:String = "palette_updated";
+		public static const PALETTE_STATE_CHANGED:String = "palette_state_changed";
 		
 		private var _colours:Array;
 		
@@ -47,7 +48,7 @@
 			_colours = colours;
 		}
 		
-		public function isReady():Boolean {
+		public function get ready():Boolean {
 			return _ready;
 		}
 	}

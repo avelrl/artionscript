@@ -68,11 +68,11 @@
 				tempTool.alpha = 0;
 			}else if (Math.floor(Math.random() * 40) == 0){
 				tempTool = createTool(tempWidth * 3, tempWidth * 3, args[0], args[1]);
-				tempTool.filters = _largeToolFiltersArray;
+				//tempTool.filters = _largeToolFiltersArray;
 				_largeToolArray.push(tempTool);
 			}else{
 				tempTool = createTool(tempWidth, tempWidth, args[0], args[1]);
-				tempTool.filters = _smallToolFiltersArray;
+				//tempTool.filters = _smallToolFiltersArray;
 			}
 			
 			return tempTool;
