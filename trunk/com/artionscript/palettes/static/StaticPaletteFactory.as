@@ -14,7 +14,7 @@
 			
 		}
 		
-		public static function randomPalette():Palette {
+		public static function getRandomPalette():Palette {
 			
 			var tempRan:int = Math.floor(Math.random() * 17);
 			var palette:Palette;
