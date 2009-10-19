@@ -2,10 +2,6 @@
 {	
 	//Saving functionality by http://www.bit-101.com/blog/?p=1415 - Keith Peters
 	//FP10 and patience required.
-	import com.artionscript.inspirations.images.BrightonPebblesInspiration;
-	import com.artionscript.inspirations.images.MonaLisaInspiration;
-	import com.artionscript.inspirations.images.SunflowersInspiration;
-	import com.artionscript.inspirations.images.TheScreamInspiration;
 	import com.bit101.SavingBitmap;
 	
 	import flash.display.Sprite;
@@ -20,6 +16,8 @@
 	
 	import flash.text.TextField;
 	
+	import flash.geom.Rectangle;
+	
 	import com.artionscript.canvas.Canvas;
 	
 	import com.artionscript.artists.Artist;
@@ -32,8 +30,12 @@
 	import com.artionscript.palettes.Palette;
 	import com.artionscript.palettes.*;
 	import com.artionscript.palettes.static.*;
-	
-	import flash.geom.Rectangle;
+
+	import com.artionscript.inspirations.images.*
+	import com.artionscript.tools.stamps.florids.*;
+	import com.artionscript.tools.FillVO;
+	import com.artionscript.tools.LineVO;
+	import com.artionscript.tools.Tool;
 	 
 	
 	/**
@@ -63,20 +65,20 @@
             _bmpData = new BitmapData(stage.stageWidth, stage.stageHeight, true, 0xFF000000);
             _savingBmp = new SavingBitmap(_bmpData);
 			
-			var palette:Palette = StaticPaletteFactory.randomPalette();
+			var palette:Palette = StaticPaletteFactory.getRandomPalette();
 			
-			var canvas:Canvas = new Canvas(800, 600, 0x000000);
+			var canvas:Canvas = new Canvas(800, 600, 0xFFFFFF);
 			
 			canvas.cacheAsBitmap = true;
 			addChild(canvas);
 
 			_artistArray = new Array();
-			//_artistArray.push(new Grid(canvas, new MonaLisaInspiration(),new PaletteCitrusGrove()));
+			_artistArray.push(new Grid(canvas, new MonaLisaInspiration(),new PaletteCitrusGrove()));
 			//_artistArray.push(new CircleGrid(canvas, new SunflowersInspiration(), new Palette()));
 			//_artistArray.push(new RectangleGrid(canvas, new Inspiration(), paletteHyperactive));
 			//_artistArray.push(new ArrowGrid(canvas, new MonaLisaInspiration(), new PaletteHyperactive()));
 			//_artistArray.push(new VariedGrid(canvas, new Inspiration(), paletteHyperactive));
-			_artistArray.push(new CircleVariedGrid(canvas, new BrightonPebblesInspiration(), new Palette()));
+			//_artistArray.push(new CircleVariedGrid(canvas, new BrightonPebblesInspiration(), new Palette()));
 			//_artistArray.push(new RectangleVariedGrid(canvas, new SunflowersInspiration(), new Palette()));
 			
 			//_artistArray.push(new AngularLines(canvas, new Inspiration(), paletteExperience)); 
@@ -92,6 +94,20 @@
 			//_artistArray.push(new PantonCurves(canvas, new Inspiration(), palettePanton));
 			//_artistArray.push(new HorizontalLines(canvas, new Inspiration(), paletteCitrusGrove));
 			//_artistArray.push(new KPetersWave(canvas, new Inspiration(), paletteCitrusGrove));
+		
+		/*
+		 var fillVO:FillVO = new FillVO();
+		 fillVO.color = palette.colours[0];
+		 
+		 var lineVO:LineVO = new LineVO();
+		 lineVO.color = palette.colours[0];
+		 lineVO.thickness = 1;
+			
+		 var florid:Tool = StaticFloridFactory.getRandomFlorid(200, 0, fillVO, lineVO);
+		florid.x = stage.width / 2;
+		florid.y = stage.height / 2;
+		addChild(florid);
+		*/
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyPress);
 		}
