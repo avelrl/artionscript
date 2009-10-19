@@ -2,10 +2,12 @@
 {
 	
 	import com.artionscript.canvas.Canvas;
+	import com.artionscript.inspirations.images.ImageInspiration;
 	import com.artionscript.tools.FillVO;
 	import com.artionscript.tools.LineVO;
 	import com.artionscript.tools.stamps.RectangleStamp;
 	import com.artionscript.tools.Tool;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -13,6 +15,7 @@
 
 	import com.artionscript.palettes.Palette;
 	import com.artionscript.inspirations.Inspiration;
+	import com.artionscript.assistants.ImageAssistant;
 	
 	/**
 	 * ...
@@ -27,6 +30,8 @@
 		private var _palette:Palette;
 		
 		protected var _toolArray:Array;
+		
+		protected var _bmpData:BitmapData;
 		
 		public function Artist(canvas:Canvas, inspiration:Inspiration=null, palette:Palette=null)
 		{
@@ -46,7 +51,31 @@
 		
 		protected function setVariables():void { }
 		
-		public function create():void { }
+		protected function setFillAndLine():void { }
+		
+		protected function listenToInspirationAndPalette():void {
+			if (inspiration) {
+				inspiration.addEventListener(Inspiration.INSPIRATION_STATE_CHANGED, inspirationOrPaletteStateChanged);
+			}
+			
+			if (palette) {
+				palette.addEventListener(Palette.PALETTE_STATE_CHANGED, inspirationOrPaletteStateChanged);
+			}
+		}
+		
+		protected function inspirationOrPaletteStateChanged(e:Event = null):void {
+			if ((inspiration == null || inspiration.ready) && (palette == null || palette.ready)) {
+				inspirationAndPaletteReady();
+			}
+		}
+			
+		protected function inspirationAndPaletteReady():void {
+			create();
+		}
+		
+		public function create():void {
+			finaliseCreate();
+		}
 		
 		protected function finaliseCreate():void {
 			if (_toolArray && _toolArray.length != 0)
@@ -69,7 +98,17 @@
 		}
 		
 		protected function getAColour(...args):uint {
-			return getRandomPaletteColour();
+			var colour:uint;
+			
+			if (_bmpData) {
+				colour = _bmpData.getPixel(args[0], args[1]);
+			}else if(palette){
+				colour = getRandomPaletteColour();
+			}else {
+				colour == 0x000000;
+			}
+			
+			return colour;
 		}
 		protected function getRandomPaletteColour():uint {
 			return palette.getRandomColour();

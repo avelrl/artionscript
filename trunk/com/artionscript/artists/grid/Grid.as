@@ -1,12 +1,17 @@
 ﻿package com.artionscript.artists.grid
 {
+	import com.adobe.errors.IllegalStateError;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.filters.BlurFilter;
 	
 	import com.artionscript.artists.Artist;
 	import com.artionscript.canvas.Canvas;
 	import com.artionscript.inspirations.Inspiration;
+	import com.artionscript.inspirations.images.ImageInspiration;
 	import com.artionscript.palettes.Palette;
+	import com.artionscript.assistants.ImageAssistant;
 	
 	import com.artionscript.tools.Tool;
 	import com.artionscript.tools.FillVO;
@@ -34,11 +39,23 @@
 		protected var ALPHA_MIN:Number = 1;
 		protected var ALPHA_MAX:Number = 1;
 		
+		protected var UPDATE_FILL_COLOUR:Boolean = true;
+		protected var UPDATE_LINE_COLOUR:Boolean = false;
+		
+		protected var fillVO:FillVO = new FillVO();
+		protected var lineVO:LineVO = new LineVO();
+		
 		public function Grid(canvas:Canvas, inspiration:Inspiration, palette:Palette) 
 		{
 			super(canvas, inspiration, palette);
 			setVariables();
-			create();
+			setFillAndLine();
+			
+			if ((inspiration == null || inspiration.ready) && (palette == null || palette.ready)){
+				inspirationAndPaletteReady();
+			}else {
+				listenToInspirationAndPalette();
+			}
 		}
 		
 		//override variables
@@ -47,9 +64,41 @@
 			include "includes/GridVariables.as";
 		}
 		
+		override protected function setFillAndLine():void {
+			fillVO = new FillVO();
+			fillVO.color = 0xFFFFFF;
+			lineVO = null;
+			//lineVO = new LineVO();
+			//lineVO.thickness = 1;
+			
+			//UPDATE_FILL_COLOUR = false;
+			//UPDATE_LINE_COLOUR = true;
+		}
+		
+		override protected function inspirationAndPaletteReady():void {
+			trace("inspirationAndPaletteReady")
+			if (inspiration && inspiration.type == Inspiration.IMAGE_TYPE && (inspiration as ImageInspiration).bmpData) {
+				_bmpData = (inspiration as ImageInspiration).bmpData.clone();
+				
+				if(palette && palette.colours.length>0){
+					_bmpData = ImageAssistant.convertBDToGreyScale(_bmpData);
+					_bmpData = ImageAssistant.equaliseGreyScaleBDHistogram(_bmpData);
+					_bmpData = ImageAssistant.posterizeGreyScaleBDToPalette(_bmpData, palette.colours);
+					//_bmpData = ImageAssistant.posterizeGreyScaleBD(_bmpData,5);
+				}
+
+				_bmpData = ImageAssistant.scaleBD(_bmpData, canvas.width, canvas.height, true, true);
+				
+				//var bmp:Bitmap = new Bitmap(_bmpData);
+				//var bmp:Bitmap = new Bitmap(ImageAssistant.scaleBD((inspiration as ImageInspiration).bmpData, canvas.width, canvas.height, true, true));
+				//bmp.alpha = .5;
+				//canvas.addChild(bmp);
+			}
+			
+			create();
+		}
+		
 		override public function create():void {
-			var fillVO:FillVO = new FillVO();
-			var lineVO:LineVO = null;
 					
 			var columns:int = Math.floor(canvas.cWidth / COLUMN_SPACING) + 1;
 			var rows:int = Math.floor(canvas.cHeight / ROW_SPACING) + 1;
@@ -62,7 +111,13 @@
 			for (var i:int = rows; i >= 0; i--){
 				for (var j:int = columns; j >= 0; j--){
 					
-					fillVO.color = getAColour();
+					if(fillVO && UPDATE_FILL_COLOUR){
+						fillVO.color = getAColour((j * COLUMN_SPACING), (i * COLUMN_SPACING));
+					}
+					
+					if(lineVO && UPDATE_LINE_COLOUR){
+						lineVO.color = getAColour((j * COLUMN_SPACING), (i * COLUMN_SPACING));
+					}
 					
 					tempTool = buildTool(fillVO, lineVO);
 					tempTool.x = (j * COLUMN_SPACING) + ((Math.random() * (MAX_X_OFFSET * 2)) - MAX_X_OFFSET);
