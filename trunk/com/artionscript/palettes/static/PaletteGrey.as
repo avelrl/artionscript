@@ -11,7 +11,7 @@
 		public function PaletteGrey() 
 		{
 			super();
-			colours = [0x000000, 0x333333, 0x666666, 0x999999, 0xCCCCCC];
+			colours = [0x000000, 0x333333, 0x666666, 0x999999, 0xCCCCCC, 0xFFFFFF];
 		}
 		
 	}
