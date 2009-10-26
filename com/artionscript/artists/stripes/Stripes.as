@@ -1,6 +1,5 @@
-﻿package com.artionscript.artists.grid
+﻿package com.artionscript.artists.stripes
 {
-	import com.adobe.errors.IllegalStateError;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -22,16 +21,13 @@
 	 * ...
 	 * @author Trevor Boyle
 	 */
-	public class Grid extends Artist
+	public class Stripes extends Artist
 	{
 		protected var COLUMN_SPACING:Number = 35;
 		protected var ROW_SPACING:Number = 35;
 		
 		protected var MIN_WIDTH:Number = 30;
 		protected var MAX_WIDTH:Number = 30;
-		
-		protected var MAX_X_OFFSET:Number = 0;
-		protected var MAX_Y_OFFSET:Number = 0;
 		
 		protected var ROTATION_MIN:Number = 0;
 		protected var ROTATION_MAX:Number =0;
@@ -45,7 +41,7 @@
 		protected var fillVO:FillVO = new FillVO();
 		protected var lineVO:LineVO = new LineVO();
 		
-		public function Grid(canvas:Canvas, inspiration:Inspiration, palette:Palette) 
+		public function Stripes(canvas:Canvas, inspiration:Inspiration, palette:Palette) 
 		{
 			super(canvas, inspiration, palette);
 			setVariables();
@@ -61,7 +57,7 @@
 		//override variables
 		override protected function setVariables():void {
 			//externally define variables to avoid frequent updating/committing of class
-			include "includes/GridVariables.as";
+			include "includes/StripesVariables.as";
 		}
 		
 		override protected function setFillAndLine():void {
@@ -84,15 +80,9 @@
 					_bmpData = ImageAssistant.convertBDToGreyScale(_bmpData);
 					_bmpData = ImageAssistant.equaliseGreyScaleBDHistogram(_bmpData);
 					_bmpData = ImageAssistant.posterizeGreyScaleBDToPalette(_bmpData, palette.colours);
-					//_bmpData = ImageAssistant.posterizeGreyScaleBD(_bmpData,5);
 				}
 
 				_bmpData = ImageAssistant.scaleBD(_bmpData, canvas.width, canvas.height, true, true);
-				
-				//var bmp:Bitmap = new Bitmap(_bmpData);
-				//var bmp:Bitmap = new Bitmap(ImageAssistant.scaleBD((inspiration as ImageInspiration).bmpData, canvas.width, canvas.height, true, true));
-				//bmp.alpha = .5;
-				//canvas.addChild(bmp);
 			}
 			
 			create();
@@ -101,34 +91,33 @@
 		override public function create():void {
 					
 			var columns:int = Math.floor(canvas.cWidth / COLUMN_SPACING) - 1;
-			var rows:int = Math.floor(canvas.cHeight / ROW_SPACING) - 1;
 			
 			var tempTool:Tool;
 			var tempWidth:Number;
 			var tempHeight:Number;
 			
 			_toolArray = new Array();
-			for (var i:int = rows; i >= 0; i--){
-				for (var j:int = columns; j >= 0; j--){
-					
-					if(fillVO && UPDATE_FILL_COLOUR){
-						fillVO.color = getAColour((j * COLUMN_SPACING), (i * ROW_SPACING));
-					}
-					
-					if(lineVO && UPDATE_LINE_COLOUR){
-						lineVO.color = getAColour((j * COLUMN_SPACING), (i * ROW_SPACING));
-					}
-					
-					tempTool = buildTool(fillVO, lineVO);
-					tempTool.x = (j * COLUMN_SPACING) + ((Math.random() * (MAX_X_OFFSET * 2)) - MAX_X_OFFSET);
-					tempTool.y = (i * ROW_SPACING) + ((Math.random() * (MAX_Y_OFFSET * 2)) - MAX_Y_OFFSET);
-					
-					tempTool.alpha = (Math.random() * (ALPHA_MAX - ALPHA_MIN)) + ALPHA_MIN;
-					tempTool.rotation = (Math.random() * (ROTATION_MAX - ROTATION_MIN)) + ROTATION_MIN;
-					
-					_toolArray.push(tempTool);
+			var randomY:int = Math.floor(Math.random() * canvas.height);
+			for (var j:int = columns; j >= 0; j--){
+				
+				if(fillVO && UPDATE_FILL_COLOUR){
+					fillVO.color = getAColour((j * COLUMN_SPACING), randomY);
 				}
+				
+				if(lineVO && UPDATE_LINE_COLOUR){
+					lineVO.color = getAColour((j * COLUMN_SPACING), randomY);
+				}
+				
+				tempTool = buildTool(fillVO, lineVO);
+				
+				tempTool.x = (j * COLUMN_SPACING);
+				
+				tempTool.alpha = (Math.random() * (ALPHA_MAX - ALPHA_MIN)) + ALPHA_MIN;
+				tempTool.rotation = (Math.random() * (ROTATION_MAX - ROTATION_MIN)) + ROTATION_MIN;
+				
+				_toolArray.push(tempTool);
 			}
+			
 			finaliseCreate();
 		}
 		
@@ -156,7 +145,7 @@
 		
 		override protected function buildTool(...args):Tool {
 			var tempWidth:Number = (Math.random() * (MAX_WIDTH - MIN_WIDTH)) + MIN_WIDTH;
-			var tempHeight:Number = tempWidth;
+			var tempHeight:Number = canvas.height;
 			return createTool(tempWidth, tempHeight, args[0], args[1]);
 		}
 	}

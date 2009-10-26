@@ -65,8 +65,6 @@
 			
 			depth = Math.max(0, Math.min(255, depth));
 			
-			var colours:Array = [0x004358, 0x1f8a70, 0xbedb39, 0xffe11a, 0xfd7400];
-			
 			var numAreas:Number = 256 / depth;
 			var numValues:Number = 255 / (depth - 1);
 			
@@ -78,10 +76,8 @@
 			var adjustedBlueFreqArr:Array = new Array();
 			for (var i:int = 0; i < 256; i++) {
 				tempArea =  Math.floor(i / numAreas);
-				trace(colours[tempArea]);
+
 				tempAdjustedFreq = Math.floor(numValues * tempArea);
-				
-				tempColour = colours[tempArea];
 				
 				adjustedRedFreqArr[i] = tempAdjustedFreq << 16 
 				adjustedGreenFreqArr[i] = tempAdjustedFreq << 8
@@ -98,11 +94,11 @@
 			
 			var tempBD:BitmapData = sourceBD.clone();
 			
+			colours = ColourAssistant.sortColoursByLightnessAndSaturation(colours);
+			
 			var depth:int = colours.length;
 			
 			depth = Math.max(0, Math.min(255, depth));
-			
-			trace(depth)
 			
 			var numAreas:Number = 256 / depth;
 			var numValues:Number = 255 / (depth - 1);
@@ -142,10 +138,11 @@
 					scaleX = scaleY = Math.min(scaleX, scaleY);
 				}
 			}
+			
 			var scaleMatrix:Matrix = new Matrix();
 			scaleMatrix.scale(scaleX, scaleY);
 			
-			var scaledBD:BitmapData = new BitmapData(tempBD.width * scaleX, tempBD.height * scaleY, false, 0x000000);
+			var scaledBD:BitmapData = new BitmapData(Math.min(tempBD.width * scaleX, 4095), Math.min(tempBD.height * scaleY, 4095), false, 0x000000);
 			scaledBD.draw(tempBD, scaleMatrix);
 			
 			return scaledBD;
