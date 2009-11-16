@@ -1,4 +1,4 @@
-#labels Phase-Design,Phase-Requirements,Featured
+#labels Phase-Design,Phase-Requirements
 A list of things to do.
 
 = Action List =
